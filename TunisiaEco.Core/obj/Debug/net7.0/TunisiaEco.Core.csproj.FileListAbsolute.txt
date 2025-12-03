@@ -1,0 +1,11 @@
+D:\TunisiaEcoTourism\TunisiaEco.Core\bin\Debug\net7.0\TunisiaEco.Core.deps.json
+D:\TunisiaEcoTourism\TunisiaEco.Core\bin\Debug\net7.0\TunisiaEco.Core.dll
+D:\TunisiaEcoTourism\TunisiaEco.Core\bin\Debug\net7.0\TunisiaEco.Core.pdb
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.AssemblyInfoInputs.cache
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.AssemblyInfo.cs
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.csproj.CoreCompileInputs.cache
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.dll
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\refint\TunisiaEco.Core.dll
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\TunisiaEco.Core.pdb
+D:\TunisiaEcoTourism\TunisiaEco.Core\obj\Debug\net7.0\ref\TunisiaEco.Core.dll

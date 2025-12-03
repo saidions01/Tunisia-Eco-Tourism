@@ -1,0 +1,140 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\TunisiaEcoTourism\\TunisiaEco.Web\\TunisiaEco.Web.csproj": {}
+  },
+  "projects": {
+    "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\TunisiaEco.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\TunisiaEco.Core.csproj",
+        "projectName": "TunisiaEco.Core",
+        "projectPath": "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\TunisiaEco.Core.csproj",
+        "packagesPath": "C:\\Users\\Onsouuus\\.nuget\\packages\\",
+        "outputPath": "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Onsouuus\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\TunisiaEcoTourism\\TunisiaEco.Web\\TunisiaEco.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\TunisiaEcoTourism\\TunisiaEco.Web\\TunisiaEco.Web.csproj",
+        "projectName": "TunisiaEco.Web",
+        "projectPath": "D:\\TunisiaEcoTourism\\TunisiaEco.Web\\TunisiaEco.Web.csproj",
+        "packagesPath": "C:\\Users\\Onsouuus\\.nuget\\packages\\",
+        "outputPath": "D:\\TunisiaEcoTourism\\TunisiaEco.Web\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Onsouuus\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\TunisiaEco.Core.csproj": {
+                "projectPath": "D:\\TunisiaEcoTourism\\TunisiaEco.Core\\TunisiaEco.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Components.WebAssembly": {
+              "target": "Package",
+              "version": "[7.0.13, )"
+            },
+            "Microsoft.AspNetCore.Components.WebAssembly.DevServer": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.13, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Runtime.Mono.browser-wasm",
+              "version": "[7.0.13, 7.0.13]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "browser-wasm": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

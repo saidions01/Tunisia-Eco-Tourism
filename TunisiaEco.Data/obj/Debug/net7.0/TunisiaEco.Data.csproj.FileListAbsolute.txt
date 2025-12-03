@@ -1,0 +1,17 @@
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Data.deps.json
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Data.runtimeconfig.json
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Data.dll
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Data.pdb
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Core.dll
+D:\TunisiaEcoTourism\TunisiaEco.Data\bin\Debug\net7.0\TunisiaEco.Core.pdb
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.csproj.AssemblyReference.cache
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.AssemblyInfoInputs.cache
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.AssemblyInfo.cs
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.csproj.CoreCompileInputs.cache
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.csproj.CopyComplete
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.dll
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\refint\TunisiaEco.Data.dll
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.pdb
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\TunisiaEco.Data.genruntimeconfig.cache
+D:\TunisiaEcoTourism\TunisiaEco.Data\obj\Debug\net7.0\ref\TunisiaEco.Data.dll

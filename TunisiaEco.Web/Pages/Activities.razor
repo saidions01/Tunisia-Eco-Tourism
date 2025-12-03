@@ -1,0 +1,206 @@
+@page "/activities"
+@using TunisiaEco.Core.DTOs
+@inject HttpClient Http
+
+<div class="container">
+    <h2>Eco-Tourism Activities in Tunisia</h2>
+    
+    <!-- Filter Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="difficultyFilter">Filter by Difficulty:</label>
+                <select @bind="selectedDifficulty" @bind:event="onchange" class="form-control" id="difficultyFilter">
+                    <option value="">All Difficulties</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Challenging">Challenging</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="searchFilter">Search Activities:</label>
+                <input @bind="searchTerm" @bind:event="oninput" type="text" class="form-control" id="searchFilter" placeholder="Search by activity name..." />
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading/Error States -->
+    @if (isLoading)
+    {
+        <div class="text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading activities...</p>
+        </div>
+    }
+    else if (errorMessage != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Error loading activities:</strong> @errorMessage
+        </div>
+    }
+    else if (!filteredActivities.Any())
+    {
+        <div class="alert alert-info">
+            <strong>No activities found.</strong> Try changing your filters.
+        </div>
+    }
+    else
+    {
+        <!-- Activities Grid -->
+        <div class="row">
+            @foreach (var activity in filteredActivities)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 activity-card">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="card-title mb-0">@activity.Name</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@activity.Description</p>
+                            
+                            <div class="activity-details">
+                                <p><strong>Destination:</strong> @activity.DestinationName</p>
+                                <p><strong>Region:</strong> @activity.DestinationRegion</p>
+                                <p><strong>Difficulty:</strong> 
+                                    <span class="badge @GetDifficultyBadgeClass(activity.Difficulty)">
+                                        @activity.Difficulty
+                                    </span>
+                                </p>
+                                <p><strong>Duration:</strong> @activity.DurationHours hours</p>
+                                <p><strong>Price:</strong> <span class="text-success fw-bold">@($"{activity.Price:0.##} DT")</span> per person</p>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">
+                                Perfect for @GetDifficultyDescription(activity.Difficulty) adventurers
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6>Activities Summary</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h4 class="text-primary">@allActivities.Count</h4>
+                                <p class="text-muted">Total Activities</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-success">@allActivities.Count(a => a.Difficulty == "Easy")</h4>
+                                <p class="text-muted">Easy Activities</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-warning">@allActivities.Count(a => a.Difficulty == "Moderate")</h4>
+                                <p class="text-muted">Moderate Activities</p>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-danger">@allActivities.Count(a => a.Difficulty == "Challenging")</h4>
+                                <p class="text-muted">Challenging Activities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<ActivityDto> allActivities = new();
+    private List<ActivityDto> filteredActivities = new();
+    private bool isLoading = true;
+    private string? errorMessage;
+    private string selectedDifficulty = "";
+    private string searchTerm = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadActivities();
+    }
+
+    private async Task LoadActivities()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            
+            var response = await Http.GetAsync("api/activities");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                allActivities = await response.Content.ReadFromJsonAsync<List<ActivityDto>>() ?? new();
+                ApplyFilters();
+            }
+            else
+            {
+                errorMessage = $"API returned status code: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading activities: {ex.Message}";
+            Console.WriteLine($"Detailed error: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private void ApplyFilters()
+    {
+        var query = allActivities.AsEnumerable();
+
+        // Filter by difficulty
+        if (!string.IsNullOrEmpty(selectedDifficulty))
+        {
+            query = query.Where(a => a.Difficulty.Equals(selectedDifficulty, StringComparison.OrdinalIgnoreCase));
+        }
+
+        // Filter by search term
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(a => a.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                    a.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                                    a.DestinationName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+        }
+
+        filteredActivities = query.ToList();
+    }
+
+    private string GetDifficultyBadgeClass(string difficulty)
+    {
+        return difficulty.ToLower() switch
+        {
+            "easy" => "bg-success",
+            "moderate" => "bg-warning",
+            "challenging" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetDifficultyDescription(string difficulty)
+    {
+        return difficulty.ToLower() switch
+        {
+            "easy" => "beginners and families",
+            "moderate" => "experienced hikers",
+            "challenging" => "expert adventurers",
+            _ => "all levels"
+        };
+    }
+}

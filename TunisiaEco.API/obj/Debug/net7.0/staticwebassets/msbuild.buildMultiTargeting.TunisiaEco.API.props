@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\TunisiaEco.API.props" />
+</Project>

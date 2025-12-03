@@ -1,0 +1,91 @@
+@page "/destinations"
+@using TunisiaEco.Core.DTOs
+@inject HttpClient Http
+
+<h3>Eco-Tourism Destinations in Tunisia</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading destinations...</em></p>
+}
+else if (errorMessage != null)
+{
+    <div class="alert alert-danger">
+        <strong>Error loading destinations:</strong> @errorMessage
+    </div>
+}
+else if (destinations == null || !destinations.Any())
+{
+    <p><em>No destinations found.</em></p>
+}
+else
+{
+    <div class="row">
+        @foreach (var destination in destinations)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    @if (!string.IsNullOrEmpty(destination.ImageUrl))
+                    {
+                        <img src="@destination.ImageUrl" class="card-img-top" alt="@destination.Name" style="height: 200px; object-fit: cover;">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@destination.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@destination.Region - @destination.Category</h6>
+                        <p class="card-text">@destination.Description</p>
+                        <p><strong>Best Season:</strong> @destination.BestSeason</p>
+                        <p><strong>Conservation Status:</strong> @destination.ConservationStatus</p>
+                        
+                        @if (destination.Activities != null && destination.Activities.Any())
+                        {
+                            <h6>Available Activities:</h6>
+                            <ul>
+                                @foreach (var activity in destination.Activities)
+                                {
+                                    <li><strong>@activity.Name</strong> - @activity.DurationHours hours - $@activity.Price</li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private DestinationDto[]? destinations;
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+            errorMessage = null;
+            
+            // Test the API connection first
+            var response = await Http.GetAsync("api/destinations");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                destinations = await response.Content.ReadFromJsonAsync<DestinationDto[]>();
+            }
+            else
+            {
+                errorMessage = $"API returned status code: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error loading destinations: {ex.Message}";
+            Console.WriteLine($"Detailed error: {ex}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}

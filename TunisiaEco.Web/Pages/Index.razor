@@ -1,0 +1,238 @@
+﻿@page "/"
+@using TunisiaEco.Core.DTOs
+@inject HttpClient Http
+
+<div class="etnafes-home">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-80">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <div class="etnafes-logo mb-4">
+                            <h1 class="display-4 fw-bold text-white">ETNAFES</h1>
+                            <p class="lead text-light">Eco-Tourism Network for Sustainable Tunisia</p>
+                        </div>
+                        <p class="hero-description text-light mb-4">
+                            Discover the natural wonders of Tunisia through sustainable tourism. 
+                            Explore pristine landscapes, protect biodiversity, and support local communities 
+                            while experiencing the authentic beauty of our environment.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="destinations" class="btn btn-success btn-lg me-3">
+                                <i class="fas fa-map-marker-alt me-2" ></i>Explore Destinations
+                            </a>
+                            <a href="activities" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-hiking me-2"></i>View Activities
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="hero-image">
+                        <div class="floating-card card-1">
+                            <i class="fas fa-tree fa-2x text-success"></i>
+                            <span>National Parks</span>
+                        </div>
+                        <div class="floating-card card-2">
+                            <i class="fas fa-mountain fa-2x text-success"></i>
+                            <span>Mountain Trails</span>
+                        </div>
+                        <div class="floating-card card-3">
+                            <i class="fas fa-water fa-2x text-success"></i>
+                            <span>Marine Reserves</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+                        <h3 class="text-success fw-bold">@(destinationsCount ?? 0)+</h3>
+                        <p class="text-muted">Protected Areas</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-hiking fa-3x text-success mb-3"></i>
+                        <h3 class="text-success fw-bold">@(activitiesCount ?? 0)+</h3>
+                        <p class="text-muted">Eco-Activities</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-seedling fa-3x text-success mb-3"></i>
+                        <h3 class="text-success fw-bold">15+</h3>
+                        <p class="text-muted">Conservation Projects</p>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-card">
+                        <i class="fas fa-users fa-3x text-success mb-3"></i>
+                        <h3 class="text-success fw-bold">50+</h3>
+                        <p class="text-muted">Local Communities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Destinations -->
+    <section class="featured-section py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12 text-center">
+                    <h2 class="section-title text-success">Featured Eco-Destinations</h2>
+                    <p class="section-subtitle text-muted">Discover Tunisia's most breathtaking natural wonders</p>
+                </div>
+            </div>
+            
+            @if (featuredDestinations != null && featuredDestinations.Any())
+            {
+                <div class="row">
+                    @foreach (var destination in featuredDestinations.Take(3))
+                    {
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="destination-card card h-100">
+                                <div class="card-img-wrapper">
+                                    <img src="@destination.ImageUrl" class="card-img-top" alt="@destination.Name" onerror="this.src='/images/placeholder.jpg'">
+                                    <div class="card-overlay">
+                                        <span class="eco-badge">@destination.ConservationStatus</span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title text-success">@destination.Name</h5>
+                                    <p class="card-text text-muted">@destination.Description</p>
+                                    <div class="destination-meta">
+                                        <span class="meta-item">
+                                            <i class="fas fa-map-marker-alt text-success me-1"></i>
+                                            @destination.Region
+                                        </span>
+                                        <span class="meta-item">
+                                            <i class="fas fa-calendar text-success me-1"></i>
+                                            Best: @destination.BestSeason
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <a href="destinations" class="btn btn-outline-success btn-sm">Explore More</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-4">
+                    <p class="text-muted">Loading featured destinations...</p>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="mission-content">
+                        <h2 class="text-success mb-4">Our Mission</h2>
+                        <p class="mission-text">
+                            ETNAFES is committed to promoting sustainable tourism practices that preserve Tunisia's 
+                            natural heritage while empowering local communities. We believe in responsible travel 
+                            that benefits both the environment and the people.
+                        </p>
+                        <div class="mission-points">
+                            <div class="mission-point">
+                                <i class="fas fa-check-circle text-success me-3"></i>
+                                <span>Environmental Conservation</span>
+                            </div>
+                            <div class="mission-point">
+                                <i class="fas fa-check-circle text-success me-3"></i>
+                                <span>Community Development</span>
+                            </div>
+                            <div class="mission-point">
+                                <i class="fas fa-check-circle text-success me-3"></i>
+                                <span>Sustainable Practices</span>
+                            </div>
+                            <div class="mission-point">
+                                <i class="fas fa-check-circle text-success me-3"></i>
+                                <span>Cultural Preservation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mission-image text-center">
+                        <div class="eco-icons">
+                            <i class="fas fa-recycle fa-4x text-success"></i>
+                            <i class="fas fa-hand-holding-heart fa-4x text-success mx-5"></i>
+                            <i class="fas fa-globe-africa fa-4x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section py-5 bg-success text-white">
+        <div class="container text-center">
+            <h2 class="mb-4">Ready to Explore Sustainable Tunisia?</h2>
+            <p class="lead mb-4">Join us in preserving Tunisia's natural beauty while experiencing unforgettable adventures.</p>
+            <div class="cta-buttons">
+                <a href="destinations" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-compass me-2"></i>Start Your Journey
+                </a>
+                <a href="#" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-info-circle me-2"></i>Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+</div>
+
+@code {
+    private List<DestinationDto>? featuredDestinations;
+    private int? destinationsCount;
+    private int? activitiesCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFeaturedDestinations();
+    }
+
+    private async Task LoadFeaturedDestinations()
+    {
+        try
+        {
+            var response = await Http.GetAsync("api/destinations");
+            if (response.IsSuccessStatusCode)
+            {
+                var destinations = await response.Content.ReadFromJsonAsync<List<DestinationDto>>();
+                featuredDestinations = destinations?.Take(3).ToList();
+                destinationsCount = destinations?.Count ?? 0;
+            }
+
+            // Load activities count
+            var activitiesResponse = await Http.GetAsync("api/activities");
+            if (activitiesResponse.IsSuccessStatusCode)
+            {
+                var activities = await activitiesResponse.Content.ReadFromJsonAsync<List<ActivityDto>>();
+                activitiesCount = activities?.Count ?? 0;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading data: {ex.Message}");
+        }
+    }
+}
