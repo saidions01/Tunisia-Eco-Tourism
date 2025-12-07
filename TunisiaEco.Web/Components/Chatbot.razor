@@ -1,0 +1,217 @@
+@using TunisiaEco.Core.Models.Chatbot
+@inject HttpClient Http
+
+<div class="chatbot-container @(IsOpen ? "open" : "")">
+    <!-- Chatbot Header -->
+    <div class="chatbot-header" @onclick="ToggleChat">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-robot me-2"></i>
+            <span>EcoGuide Assistant</span>
+        </div>
+        <button class="btn btn-sm btn-link text-white" @onclick="ToggleChat">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" @ref="chatContainer">
+        @foreach (var message in Messages)
+        {
+            <div class="message @(message.Role == "user" ? "user-message" : "bot-message")">
+                <div class="message-content">
+                    @if (message.Role == "user")
+                    {
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bot-avatar">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                    }
+                    <div class="message-text">
+                        @if (message.Role == "assistant")
+                        {
+                            <MarkdownText Text="@message.Content" />
+                        }
+                        else
+                        {
+                            @message.Content
+                        }
+                    </div>
+                </div>
+                <div class="message-time">
+                    @message.Timestamp.ToLocalTime().ToString("HH:mm")
+                </div>
+            </div>
+        }
+        
+        @if (IsTyping)
+        {
+            <div class="message bot-message">
+                <div class="message-content">
+                    <div class="bot-avatar">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Recommendations -->
+    @if (CurrentResponse?.Recommendations?.Any() == true)
+    {
+        <div class="recommendations">
+            <h6>📌 Suggestions:</h6>
+            @foreach (var rec in CurrentResponse.Recommendations)
+            {
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">
+                        @if (rec.Type == "destination")
+                        {
+                            <i class="fas fa-map-marker-alt"></i>
+                        }
+                        else if (rec.Type == "activity")
+                        {
+                            <i class="fas fa-hiking"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-lightbulb"></i>
+                        }
+                    </div>
+                    <div class="recommendation-content">
+                        <strong>@rec.Name</strong>
+                        <p>@rec.Description</p>
+                        @if (!string.IsNullOrEmpty(rec.Link))
+                        {
+                            <a href="@rec.Link" class="btn btn-sm btn-outline-success">Learn More</a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Chat Input -->
+    <div class="chat-input">
+        <input @bind="UserInput"
+               @bind:event="oninput"
+               @onkeypress="HandleKeyPress"
+               placeholder="Ask about eco-tourism in Tunisia..."
+               class="form-control"
+               disabled="@IsTyping" />
+        <button class="btn btn-success" @onclick="SendMessage" disabled="@IsTyping || string.IsNullOrWhiteSpace(UserInput)">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- Floating Chat Button -->
+<button class="chatbot-toggle-btn @(IsOpen ? "hidden" : "")" @onclick="ToggleChat">
+    <i class="fas fa-comment"></i>
+</button>
+
+@code {
+    private bool IsOpen = false;
+    private bool IsTyping = false;
+    private string UserInput = "";
+    private List<ChatMessage> Messages = new();
+    private ChatResponse? CurrentResponse;
+    private ElementReference chatContainer;
+    
+    [Parameter] public EventCallback<string> OnMessageSent { get; set; }
+    private string userMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadWelcomeMessage();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ScrollToBottom();
+        }
+    }
+    
+    private async Task LoadWelcomeMessage()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<ChatResponse>("api/chatbot/welcome");
+            if (response != null)
+            {
+                Messages.Add(new ChatMessage
+                {
+                    Role = "assistant",
+                    Content = response.Response,
+                    Timestamp = DateTime.UtcNow
+                });
+                CurrentResponse = response;
+                StateHasChanged();
+                await ScrollToBottom();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading welcome: {ex.Message}");
+        }
+    }
+    
+    private async Task SendMessage()
+    {
+        // Logic to send the message
+        await OnMessageSent.InvokeAsync(userMessage);
+        userMessage = string.Empty; // Clear the input after sending
+    }
+    
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !string.IsNullOrWhiteSpace(UserInput))
+        {
+            await SendMessage();
+        }
+    }
+    
+    private void ToggleChat()
+    {
+        IsOpen = !IsOpen;
+        if (IsOpen)
+        {
+            _ = ScrollToBottom();
+        }
+    }
+    
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(50); // Small delay for DOM update
+        try
+        {
+            await chatContainer.FocusAsync();
+        }
+        catch
+        {
+            // Ignore if element not found
+        }
+    }
+}
+
+<!-- Markdown component for formatted responses -->
+<MarkdownText @attributes="@AdditionalAttributes">
+    @ChildContent
+</MarkdownText>
+
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalAttributes { get; set; } = new();
+}

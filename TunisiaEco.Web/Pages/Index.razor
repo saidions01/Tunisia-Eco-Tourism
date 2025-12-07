@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using TunisiaEco.Core.DTOs
+@using TunisiaEco.Web.Components
 @inject HttpClient Http
 
 <div class="etnafes-home">
@@ -198,16 +199,33 @@
             </div>
         </div>
     </section>
+
+    <!-- Always render the Chatbot component -->
+    <Chatbot OnMessageSent="HandleMessageSent" />
+    <!-- Button to toggle chatbot visibility -->
+    <button @onclick="ToggleChatbot">Toggle Chatbot</button>
+
+    <!-- Conditionally render the Chatbot component -->
+    @if (isChatbotVisible)
+    {
+        <Chatbot OnMessageSent="HandleMessageSent" />
+    }
 </div>
 
 @code {
     private List<DestinationDto>? featuredDestinations;
     private int? destinationsCount;
     private int? activitiesCount;
+    private bool isChatbotVisible = false; // State for chatbot visibility
 
     protected override async Task OnInitializedAsync()
     {
         await LoadFeaturedDestinations();
+    }
+
+    private void ToggleChatbot()
+    {
+        isChatbotVisible = !isChatbotVisible; // Toggle visibility
     }
 
     private async Task LoadFeaturedDestinations()
@@ -234,5 +252,11 @@
         {
             Console.WriteLine($"Error loading data: {ex.Message}");
         }
+    }
+
+    private void HandleMessageSent(string message)
+    {
+        Console.WriteLine($"Message sent: {message}");
+        // Handle the message as needed
     }
 }

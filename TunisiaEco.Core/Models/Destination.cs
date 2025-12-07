@@ -34,7 +34,8 @@ public enum EcoCategory
     MarineProtectedArea,
     CulturalHeritage,
     DesertOasis,
-    MountainEscape
+    MountainEscape,
+    
 }
 
 public enum DifficultyLevel

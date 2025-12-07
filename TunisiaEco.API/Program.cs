@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TunisiaEco.Data;
+using TunisiaEco.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,10 +21,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         b => b.MigrationsAssembly("TunisiaEco.Data") // Changed to Data project
     ));
 
-// CORS for frontend communication
+// Add Chatbot service
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
+
+// Add HTTP client for Llama API
+builder.Services.AddHttpClient();
+
+// CORS for frontend communication (including chatbot)
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowBlazorApp", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
         policy.WithOrigins("*")
               .AllowAnyHeader()
@@ -31,7 +38,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-
+// Build the app
 var app = builder.Build();
 
 // Configure pipeline
@@ -42,7 +49,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowBlazorApp");
+app.UseCors("AllowAll");
 app.UseAuthorization();
 app.MapControllers();
 
